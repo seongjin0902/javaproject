@@ -62,7 +62,7 @@ class Main_GUI extends JFrame implements ActionListener, KeyListener {
 		btn1 = new JButton("글 작성");
 		btn2 = new JButton("내가 쓴글");
 		btn3 = new JButton("로그인");
-		btn4 = new JButton("종료");
+		btn4 = new JButton("회원가입");
 		btn5 = new JButton("검색");
 		tbl1 = new JTable();
 		tbl2 = new JTable();
@@ -82,7 +82,7 @@ class Main_GUI extends JFrame implements ActionListener, KeyListener {
 		btn1.setBounds(680, 80, 90, 30); // 글작성
 		btn2.setBounds(780, 80, 90, 30); // 내가 쓴 글
 		btn3.setBounds(680, 800, 90, 30);	//로그인
-		btn4.setBounds(770, 800, 90, 30); // 나가기
+		btn4.setBounds(770, 800, 90, 30); // 회원가입
 		btn5.setBounds(160, 800, 60, 30); // 검색
 
 		scroll1.setBounds(10, 130, 860, 200); // 인기글 스크롤
@@ -118,13 +118,12 @@ class Main_GUI extends JFrame implements ActionListener, KeyListener {
 				dispose();
 			}
 		});
-
+		// 회원가입 화면으로 이동
 		btn4.addActionListener(new ActionListener() {
 
 			@Override
-			public void actionPerformed(ActionEvent e) { // 종료
-				JOptionPane.showMessageDialog(null, "프로그램 종료하실?");
-				System.exit(0);
+			public void actionPerformed(ActionEvent e) {
+
 			}
 		});
 		btn5.addActionListener(new ActionListener() {

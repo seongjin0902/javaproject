@@ -3,17 +3,15 @@ package project;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextArea;
-import javax.swing.table.DefaultTableModel;
+import javax.swing.JTextField;
 
 public class Login {
 
@@ -25,19 +23,11 @@ public class Login {
 class Login_GUI extends JFrame implements ActionListener, KeyListener {
 	JButton btn1;
 	JButton btn2;
-//	JButton btn3;
-	JButton btn4;
-	JButton btn5;
+	JTextField txt1; //아이디
+	JTextField txt2; //비번
 
-	JTable tbl1;
-	JTable tbl2;
-	JLabel txt3;
 
-	JTextArea area1;
-	JScrollPane scroll1;
-	JScrollPane scroll2;
-	
-	DefaultTableModel model;
+
 
 	Login_GUI() {
 		// Frame
@@ -52,14 +42,16 @@ class Login_GUI extends JFrame implements ActionListener, KeyListener {
 		// Component
 		btn1 = new JButton("로그인");
 		btn2 = new JButton("취소");
-
+		txt1 = new JTextField("ID : ");
+		txt2 = new JTextField("PW : ");
 
 
 		// Positioning
 
-		btn1.setBounds(120, 250, 120, 50); // 로그인
-		btn2.setBounds(260, 250, 120, 50); //	취소
-
+		btn1.setBounds(110, 250, 120, 40); // 로그인
+		btn2.setBounds(250, 250, 120, 40); // 취소
+		txt1.setBounds(60,100,350,40);	// 아이디
+		txt2.setBounds(60,160,350,40);	// 비번
 
 		// Event처리
 		
@@ -82,6 +74,8 @@ class Login_GUI extends JFrame implements ActionListener, KeyListener {
 		// Add_Panel_Component
 		panel.add(btn1);
 		panel.add(btn2);
+		panel.add(txt1);
+		panel.add(txt2);
 
 		// Frame
 		add(panel); // 프레임에 panel추가
@@ -99,6 +93,39 @@ class Login_GUI extends JFrame implements ActionListener, KeyListener {
 				
 			}
 		});
+		
+		// 포커스 시 공백처리
+        txt1.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                if (txt1.getText().equals("ID : ")) {
+                    txt1.setText("");
+                }
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (txt1.getText().isEmpty()) {
+                    txt1.setText("ID : ");
+                }
+            }
+        });
+
+        txt2.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                if (txt2.getText().equals("PW : ")) {
+                    txt2.setText("");
+                }
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (txt2.getText().isEmpty()) {
+                    txt2.setText("PW : ");
+                }
+            }
+        });
 
 	}
 
