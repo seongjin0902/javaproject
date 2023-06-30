@@ -24,7 +24,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
-public class Main1 {
+public class Main1{
 
 	public static void main(String[] args) {
 
@@ -49,7 +49,6 @@ class Main_GUI extends JFrame implements ActionListener, KeyListener {
 	JScrollPane scroll2;
 	
 	JTextField srch;
-	
 	DefaultTableModel model;
 
 	Main_GUI() {
@@ -132,29 +131,34 @@ class Main_GUI extends JFrame implements ActionListener, KeyListener {
 			}
 		});
 		
+		String[] columns = { "number", "글쓴이", "글제목", "작성날짜"};
 		btn5.addActionListener(new ActionListener() {
-			 @Override
-			    public void actionPerformed(ActionEvent e) {
-			        String searchKeyword = srch.getText();
-			        boolean found = false;
-			        int count=0;
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String searchKeyword = srch.getText();
+				boolean found = false;
+				int count = 0;
+				DefaultTableModel searchModel = new DefaultTableModel(columns, 0);
 
-			        for (int row = 0; row < model.getRowCount(); row++) {
-			            String title = (String) model.getValueAt(row, 2);
-			            String author = (String) model.getValueAt(row, 1);
-			            if (title.equalsIgnoreCase(searchKeyword) || author.equalsIgnoreCase(searchKeyword)) {
-			                count++;
-			            }
-			        }
+				for (int row = 0; row < model.getRowCount(); row++) {
+					String author = (String) model.getValueAt(row, 1);
+					String title = (String) model.getValueAt(row, 2);
 
-			        if (count > 0) {
-			            JOptionPane.showMessageDialog(null, count + "개의 게시물이 검색되었습니다.");
-			            new Search_GUI(searchKeyword, model);
-			            dispose();
-			        } else {
-			            JOptionPane.showMessageDialog(null, "검색된 결과가 없습니다.");
-			        }
-			    }
+					if (author.equalsIgnoreCase(searchKeyword) || title.equalsIgnoreCase(searchKeyword)) {
+						found = true;
+						count++;
+						searchModel.addRow(new Object[]{model.getValueAt(row, 0), author, title, model.getValueAt(row, 3)});
+					}
+				}
+
+				if (found) {
+					JOptionPane.showMessageDialog(null, count + "개의 게시물이 검색되었습니다.");
+					new Search_GUI(searchKeyword, searchModel);
+					dispose();
+				} else {
+					JOptionPane.showMessageDialog(null, "검색된 결과가 없습니다.");
+				}
+			}
 		});
 		
 		
@@ -185,6 +189,10 @@ class Main_GUI extends JFrame implements ActionListener, KeyListener {
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
+		
+		
+		
+		
 		// DB연결해서 메인창에 띄우기
 		String id = "root";
 		String pw = "1234";
@@ -202,7 +210,7 @@ class Main_GUI extends JFrame implements ActionListener, KeyListener {
 			conn = DriverManager.getConnection(url, id, pw); // 성공하면 Connection객체를 반환
 			System.out.println("DB Connected!");
 
-			String[] column = { "number", "글쓴이", "글제목", "작성날짜" };
+			String[] column = { "number", "글쓴이", "글제목", "작성날짜", "조회수" };
 			Object[][] data = {};
 			
 			model = new DefaultTableModel(data,column) {
@@ -233,8 +241,9 @@ class Main_GUI extends JFrame implements ActionListener, KeyListener {
 
 			table.getColumnModel().getColumn(0).setMaxWidth(50);
 			table.getColumnModel().getColumn(1).setMaxWidth(200);
-			table.getColumnModel().getColumn(2).setMaxWidth(1000);
-			table.getColumnModel().getColumn(3).setMaxWidth(400);
+			table.getColumnModel().getColumn(2).setMaxWidth(800);
+			table.getColumnModel().getColumn(3).setMaxWidth(300);
+			table.getColumnModel().getColumn(4).setMaxWidth(100);
 
 			panel.add(scroll);
 			panel.setLayout(null);

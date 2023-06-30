@@ -39,6 +39,7 @@ class DB_GUI extends JFrame implements ActionListener, KeyListener {
 	JLabel tbl5;
 	JTextArea area1;
 	JScrollPane scroll1;
+	JTextArea comment;
 
 	// DefaultTableModel 변수 추가
 	DefaultTableModel model4;
@@ -58,7 +59,9 @@ class DB_GUI extends JFrame implements ActionListener, KeyListener {
 		btn1 = new JButton("나가기");
 		lbl1 = new JLabel("게시물 조회");
 		area1 = new JTextArea();
-		area1.setBounds(10, 90, 210, 300);
+		area1.setBounds(10, 90, 210, 500);
+		JButton uploadBtn = new JButton("댓글 업로드"); //댓글 업로드 버튼
+		uploadBtn.setBounds(720,700,120,50);
 
 		JTextField srch = new JTextField();
 
@@ -81,6 +84,7 @@ class DB_GUI extends JFrame implements ActionListener, KeyListener {
 			tbl2 = new JLabel("글쓴이 :" + writer);
 			tbl3 = new JLabel("글제목 : " + title);
 			tbl5 = new JLabel("작성날짜 : " + date);
+			comment = new JTextArea(); // 댓글
 
 			String[] column4 = { "글내용" };
 
@@ -96,6 +100,7 @@ class DB_GUI extends JFrame implements ActionListener, KeyListener {
 			tbl3.setBounds(10, 150, 850, 50);
 			tbl5.setBounds(10, 750, 850, 50);
 			scroll4.setBounds(10, 200, 850, 530);
+			comment.setBounds(8,700,700,50); //댓글 창 위치/ 크기
 			panel.add(tbl1);
 			panel.add(tbl2);
 			panel.add(tbl3);
