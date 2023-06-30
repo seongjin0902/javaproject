@@ -9,6 +9,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -37,9 +39,11 @@ class DB_GUI extends JFrame implements ActionListener, KeyListener {
 	JLabel tbl3;
 	JTable tbl4;
 	JLabel tbl5;
+	JTextArea comment; //댓글
 	JTextArea area1;
 	JScrollPane scroll1;
-	JTextArea comment;
+//	댓글을 저장할 리스트
+	List<String> commentList = new ArrayList<>();
 
 	// DefaultTableModel 변수 추가
 	DefaultTableModel model4;
@@ -59,9 +63,9 @@ class DB_GUI extends JFrame implements ActionListener, KeyListener {
 		btn1 = new JButton("나가기");
 		lbl1 = new JLabel("게시물 조회");
 		area1 = new JTextArea();
-		area1.setBounds(10, 90, 210, 500);
-		JButton uploadBtn = new JButton("댓글 업로드"); //댓글 업로드 버튼
+		JButton uploadBtn = new JButton("댓글 업로드");
 		uploadBtn.setBounds(720,700,120,50);
+		area1.setBounds(10, 90, 210, 500);
 
 		JTextField srch = new JTextField();
 
@@ -84,28 +88,31 @@ class DB_GUI extends JFrame implements ActionListener, KeyListener {
 			tbl2 = new JLabel("글쓴이 :" + writer);
 			tbl3 = new JLabel("글제목 : " + title);
 			tbl5 = new JLabel("작성날짜 : " + date);
-			comment = new JTextArea(); // 댓글
+			comment = new JTextArea(); //댓글
 
 			String[] column4 = { "글내용" };
-
+		
 			model4 = new DefaultTableModel(column4, 0);
-
 			tbl4 = new JTable(model4);
+			tbl4.setRowHeight(300);
+//			테이블 수정 불가능
+			tbl4.setEnabled(false);
 
 			JScrollPane scroll4 = new JScrollPane(tbl4);
-
+			
+			scroll4.setBounds(10, 200, 850, 300);
 			lbl1.setBounds(10, 30, 400, 50);
 			tbl1.setBounds(10, 100, 100, 50);
 			tbl2.setBounds(130, 100, 730, 50);
 			tbl3.setBounds(10, 150, 850, 50);
 			tbl5.setBounds(10, 750, 850, 50);
-			scroll4.setBounds(10, 200, 850, 530);
-			comment.setBounds(8,700,700,50); //댓글 창 위치/ 크기
+			comment.setBounds(8,700,700,50);
 			panel.add(tbl1);
 			panel.add(tbl2);
 			panel.add(tbl3);
 			panel.add(tbl5);
-			panel.add(scroll4);
+			panel.add(comment);
+			panel.add(uploadBtn);
 
 			pstmt = conn.prepareStatement("SELECT 글내용 FROM tbl_게시판 WHERE number = ?");
 			pstmt.setInt(1, number);
@@ -116,7 +123,9 @@ class DB_GUI extends JFrame implements ActionListener, KeyListener {
 				model4.addRow(new Object[] { content });
 			}
 
-			tbl4.setModel(model4);
+//			tbl4.setModel(model4);
+			scroll4.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);			
+			panel.add(scroll4);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -151,6 +160,22 @@ class DB_GUI extends JFrame implements ActionListener, KeyListener {
 				JOptionPane.showMessageDialog(null, "나가실?");
 				dispose();
 			}
+		});
+		uploadBtn.addActionListener(new ActionListener() {
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		        String commentText = comment.getText();
+		        if (!commentText.isEmpty()) {
+		            // 댓글 리스트에 추가
+		            commentList.add(commentText);
+		            // 모델 갱신
+		            model4.addRow(new Object[] { commentText });
+		            // 스크롤 조정
+		            tbl4.scrollRectToVisible(tbl4.getCellRect(tbl4.getRowCount() - 1, 0, true));
+		            // 댓글 입력 필드 초기화
+		            comment.setText("");
+		        }
+		    }
 		});
 
 		area1.setEditable(false);
