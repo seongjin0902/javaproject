@@ -27,8 +27,10 @@ import javax.swing.table.DefaultTableModel;
 public class Main1 {
 
 	public static void main(String[] args) {
-		new Main_GUI();
+
+        new Main_GUI();
 	}
+
 }
 
 class Main_GUI extends JFrame implements ActionListener, KeyListener {
@@ -45,6 +47,8 @@ class Main_GUI extends JFrame implements ActionListener, KeyListener {
 	JTextArea area1;
 	JScrollPane scroll1;
 	JScrollPane scroll2;
+	
+	JTextField srch;
 	
 	DefaultTableModel model;
 
@@ -71,8 +75,8 @@ class Main_GUI extends JFrame implements ActionListener, KeyListener {
 		// area1.setBounds(10,90,210,300);
 		scroll1 = new JScrollPane(area1);
 		scroll2 = new JScrollPane(area1);
+		srch = new JTextField();
 
-		JTextField srch = new JTextField();
 
 		// Positioning
 		tbl1.setBounds(10, 130, 860, 200); // 인기글
@@ -80,9 +84,9 @@ class Main_GUI extends JFrame implements ActionListener, KeyListener {
 		txt3.setBounds(280, 10, 300, 60); // 제목
 
 		btn1.setBounds(680, 80, 90, 30); // 글작성
-		btn2.setBounds(780, 80, 90, 30); // 내가 쓴 글
+		btn2.setBounds(775, 80, 90, 30); // 내가 쓴 글
 		btn3.setBounds(680, 800, 90, 30);	//로그인
-		btn4.setBounds(770, 800, 90, 30); // 회원가입
+		btn4.setBounds(775, 800, 90, 30); // 회원가입
 		btn5.setBounds(160, 800, 60, 30); // 검색
 
 		scroll1.setBounds(10, 130, 860, 200); // 인기글 스크롤
@@ -123,9 +127,11 @@ class Main_GUI extends JFrame implements ActionListener, KeyListener {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-
+				new Join_GUI();
+				dispose();
 			}
 		});
+		
 		btn5.addActionListener(new ActionListener() {
 			 @Override
 			    public void actionPerformed(ActionEvent e) {
@@ -170,13 +176,7 @@ class Main_GUI extends JFrame implements ActionListener, KeyListener {
 		panel.add(btn4);
 		panel.add(btn5);
 
-//		panel.add(tbl1);
-//		panel.add(tbl2);
 		panel.add(txt3);	//다 같이 게시판 제목
-
-//		panel.add(area1);
-//		panel.add(scroll1);	//게시물 목록뜰 때 더블클릭 안되게 할 수 있음
-//		panel.add(scroll2);
 
 		panel.add(srch);
 
@@ -224,10 +224,6 @@ class Main_GUI extends JFrame implements ActionListener, KeyListener {
 					Object[] rowData = { rs.getInt("number"), rs.getString("글쓴이"), rs.getString("글제목"),
 							rs.getString("작성날짜") };
 					model.addRow(rowData);
-//					System.out.print(rs.getString("number") + " ");
-//					System.out.print(rs.getString("글쓴이") + " ");
-//					System.out.print(rs.getString("글제목") + " ");
-//					System.out.print(rs.getString("작성날짜") + "\n");
 				}
 			}
 
@@ -242,6 +238,7 @@ class Main_GUI extends JFrame implements ActionListener, KeyListener {
 
 			panel.add(scroll);
 			panel.setLayout(null);
+			
 			
 			table.addMouseListener(new MouseAdapter() {
 				@Override

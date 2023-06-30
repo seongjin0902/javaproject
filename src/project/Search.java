@@ -61,12 +61,12 @@ class Search_GUI extends JFrame implements ActionListener, KeyListener {
 		tbl2 = new JTable();
 
 		area1 = new JTextArea();
-		// area1.setBounds(10,90,210,300);
 		scroll1 = new JScrollPane(area1);
 		scroll2 = new JScrollPane(area1);
 		
-		JTextField srch = new JTextField();
+		JTextField srch = new JTextField(searchKeyword);
 		searchModel = new DefaultTableModel();
+		
 		// Positioning
 		lbl1.setBounds(10, 10, 860, 80);		//제목
 		tbl2.setBounds(10, 100, 860, 680);		//작성 글 
@@ -87,12 +87,6 @@ class Search_GUI extends JFrame implements ActionListener, KeyListener {
         }
 		
 		btn1.setBounds(770, 800, 90, 30);		//나가기
-
-		
-//		scroll1.setBounds(10, 130, 860, 200);	//인기글 스크롤
-//		scroll2.setBounds(10, 340, 860, 450);	//메인글 스크롤
-		
-//		srch.setBounds(15,800,140,30);			//검색
 
 		// Event처리
 		btn1.addActionListener(new ActionListener() {
