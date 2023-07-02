@@ -167,7 +167,7 @@ class WriterMain_GUI extends JFrame implements ActionListener, KeyListener {
 					System.out.println("Driver Loading Success..");
 					conn = DriverManager.getConnection(url,id,pw);
 					System.out.println("DB Connected..");
-					pstmt = conn.prepareStatement("insert into tbl_게시판 values(null,?,?,?,now())");
+					pstmt = conn.prepareStatement("insert into tbl_게시판 values(null,?,?,?,now(),null)");
 					pstmt.setString(1, txt1.getText());
 					pstmt.setString(2, txt2.getText());
 					pstmt.setString(3, txt3.getText());

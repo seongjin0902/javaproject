@@ -1,11 +1,12 @@
 package project;
 
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -82,6 +83,7 @@ class Search_GUI extends JFrame implements ActionListener, KeyListener {
 	                searchModel.addRow(rowData);
 	            }
 	        }
+	        
 
 	        btn1.setBounds(770, 800, 90, 30);        //나가기
 
@@ -110,6 +112,21 @@ class Search_GUI extends JFrame implements ActionListener, KeyListener {
 	        scroll2 = new JScrollPane(tbl2);
 	        scroll2.setBounds(10, 100, 860, 680);
 	        panel.add(scroll2);
+	        
+	        // 테이블 클릭 이벤트 처리
+	        tbl2.addMouseListener(new MouseAdapter() {
+	            @Override
+	            public void mouseClicked(MouseEvent e) {
+	                int row = tbl2.getSelectedRow();
+	                int number = (int) tbl2.getValueAt(row, 0);
+	                String author = (String) tbl2.getValueAt(row, 1);
+	                String title = (String) tbl2.getValueAt(row, 2);
+	                String date = (String) tbl2.getValueAt(row, 3);
+
+	                dispose(); // 현재 GUI 창 닫기
+	                new DB_GUI(number, author, title, date); // DB_GUI 열기
+	            }
+	        });
 	        
 //	        테이플 가로 넓이 조정
 	        tbl2.getColumnModel().getColumn(0).setMaxWidth(50);

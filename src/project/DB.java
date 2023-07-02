@@ -26,7 +26,7 @@ import javax.swing.table.DefaultTableModel;
 public class DB extends MyWriter_GUI {
 
 	public static void main(String[] args) {
-		new DB_GUI();
+//		new DB_GUI();
 	}
 
 }
@@ -39,9 +39,14 @@ class DB_GUI extends JFrame implements ActionListener, KeyListener {
 	JLabel tbl3;
 	JTable tbl4;
 	JLabel tbl5;
-	JTextArea comment; //댓글
+//	JTextArea comment; // 댓글
 	JTextArea area1;
 	JScrollPane scroll1;
+
+	JTextArea comment = new JTextArea();
+	
+	DefaultTableModel commentmodel;	//DB에서 끌어온 댓글목록을 보여줄 공간 
+
 //	댓글을 저장할 리스트
 	List<String> commentList = new ArrayList<>();
 
@@ -64,7 +69,7 @@ class DB_GUI extends JFrame implements ActionListener, KeyListener {
 		lbl1 = new JLabel("게시물 조회");
 		area1 = new JTextArea();
 		JButton uploadBtn = new JButton("댓글 업로드");
-		uploadBtn.setBounds(720,700,120,50);
+		uploadBtn.setBounds(720, 700, 120, 50);
 		area1.setBounds(10, 90, 210, 500);
 
 		JTextField srch = new JTextField();
@@ -79,6 +84,7 @@ class DB_GUI extends JFrame implements ActionListener, KeyListener {
 		ResultSet rs = null;
 
 		try {
+			comment = new JTextArea();
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			System.out.println("Driver Loading Success..");
 			conn = DriverManager.getConnection(url, id, pw);
@@ -88,10 +94,10 @@ class DB_GUI extends JFrame implements ActionListener, KeyListener {
 			tbl2 = new JLabel("글쓴이 :" + writer);
 			tbl3 = new JLabel("글제목 : " + title);
 			tbl5 = new JLabel("작성날짜 : " + date);
-			comment = new JTextArea(); //댓글
+//			Component comment = new JTextArea(); // 댓글쓰는 창
 
 			String[] column4 = { "글내용" };
-		
+
 			model4 = new DefaultTableModel(column4, 0);
 			tbl4 = new JTable(model4);
 			tbl4.setRowHeight(300);
@@ -99,21 +105,22 @@ class DB_GUI extends JFrame implements ActionListener, KeyListener {
 			tbl4.setEnabled(false);
 
 			JScrollPane scroll4 = new JScrollPane(tbl4);
-			
+
 			scroll4.setBounds(10, 200, 850, 300);
 			lbl1.setBounds(10, 30, 400, 50);
 			tbl1.setBounds(10, 100, 100, 50);
 			tbl2.setBounds(130, 100, 730, 50);
 			tbl3.setBounds(10, 150, 850, 50);
 			tbl5.setBounds(10, 750, 850, 50);
-			comment.setBounds(8,700,700,50);
+			comment.setBounds(8, 700, 700, 50);
 			panel.add(tbl1);
 			panel.add(tbl2);
 			panel.add(tbl3);
 			panel.add(tbl5);
-			panel.add(comment);
+			panel.add(comment); // 댓글쓰는창 추가
 			panel.add(uploadBtn);
 
+			// 글내용만 끌어오기
 			pstmt = conn.prepareStatement("SELECT 글내용 FROM tbl_게시판 WHERE number = ?");
 			pstmt.setInt(1, number);
 			rs = pstmt.executeQuery();
@@ -124,7 +131,7 @@ class DB_GUI extends JFrame implements ActionListener, KeyListener {
 			}
 
 //			tbl4.setModel(model4);
-			scroll4.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);			
+			scroll4.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 			panel.add(scroll4);
 
 		} catch (Exception e) {
@@ -149,10 +156,6 @@ class DB_GUI extends JFrame implements ActionListener, KeyListener {
 			}
 		}
 
-		// ------------------------------------------------------------------
-
-		btn1.setBounds(770, 800, 90, 30);
-
 		btn1.addActionListener(new ActionListener() {
 
 			@Override
@@ -161,23 +164,64 @@ class DB_GUI extends JFrame implements ActionListener, KeyListener {
 				dispose();
 			}
 		});
+		// 댓글 관련 코드------------------------------------------------------------------
+		// 업로드 버튼을 눌렀을 때, 이벤트 처리
 		uploadBtn.addActionListener(new ActionListener() {
-		    @Override
-		    public void actionPerformed(ActionEvent e) {
-		        String commentText = comment.getText();
-		        if (!commentText.isEmpty()) {
-		            // 댓글 리스트에 추가
-		            commentList.add(commentText);
-		            // 모델 갱신
-		            model4.addRow(new Object[] { commentText });
-		            // 스크롤 조정
-		            tbl4.scrollRectToVisible(tbl4.getCellRect(tbl4.getRowCount() - 1, 0, true));
-		            // 댓글 입력 필드 초기화
-		            comment.setText("");
-		        }
-		    }
+
+			public void actionPerformed(ActionEvent e) {
+				try {
+					String id = "root";
+					String pw = "1234";
+					String url = "jdbc:mysql://localhost:3306/게시판";
+
+					Connection conn = null;
+					PreparedStatement pstmt = null;
+					ResultSet rs = null;
+
+					Class.forName("com.mysql.cj.jdbc.Driver");
+					System.out.println("댓글Driver Loading Success..");
+
+					conn = DriverManager.getConnection(url, id, pw);
+
+					System.out.println("댓글 DB Connected..");
+//					JTextArea comment = new JTextArea(); // 댓글
+					String numberText = tbl1.getText().substring(4).trim(); // tbl1에서 가져온 숫자 부분을 공백을 제거하고 추출하여 설정
+					String nameText = tbl2.getText().substring(5).trim(); // tbl2에서 가져온 글쓴이 부분을 공백을 제거하고 추출하여 설정
+
+					pstmt = conn
+							.prepareStatement("INSERT INTO tbl_댓글 (number, 댓글내용, 글쓴이, 작성날짜) VALUES (?, ?, ?, NOW())");
+					pstmt.setInt(1, Integer.parseInt(numberText)); // 숫자로 변환하여 쿼리에 설정
+					pstmt.setString(2, comment.getText());
+					pstmt.setString(3, nameText); // 쿼리에 설정\
+
+					int result = pstmt.executeUpdate();
+
+					if (result > 0) {
+						System.out.println("댓글이 성공적으로 저장되었습니다.");
+						// 댓글 입력 필드 초기화
+						comment.setText("");
+					} else {
+						System.out.println("댓글 저장에 실패했습니다.");
+					}
+
+					pstmt.close();
+					conn.close();
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} // 드라이버 적재
+
+			}
 		});
 
+		//tbl_댓글 DB를 보여주기------------------------------------------------------
+		
+
+
+		
+		
+		//-------------------------------------------------------------------------
+		
 		area1.setEditable(false);
 
 		btn1.setFont(new Font("굴림", Font.BOLD, 17));
